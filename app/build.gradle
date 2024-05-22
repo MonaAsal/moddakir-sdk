@@ -65,6 +65,7 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
 
     implementation project(':random-call')
-    //implementation 'com.github.MonaAsal:nusuk-sdk:1.9'
+    implementation 'com.github.MonaAsal:moddakir-sdk:1.0'
+
 
 }
