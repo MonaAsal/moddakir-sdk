@@ -1,6 +1,7 @@
 package com.moddakir.androidlibrary.ui;
 
 import static com.moddakir.call.view.agora.AgoraActivity.makeCall;
+
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.akexorcist.localizationactivity.ui.LocalizationActivity;
 import com.moddakir.call.R;
 import com.moddakir.call.utils.Perference;
+
 import java.util.List;
 import pub.devrel.easypermissions.EasyPermissions;
 
