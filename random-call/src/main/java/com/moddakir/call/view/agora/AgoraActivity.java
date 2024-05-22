@@ -420,7 +420,7 @@ public class AgoraActivity extends MainCallScreen
     }
 
     private void connectToRTC() {
-        if (checkSelfPermission()) {
+       // if (checkSelfPermission()) {
             ChannelMediaOptions options = new ChannelMediaOptions();
             options.autoSubscribeAudio = true;
             options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
@@ -429,9 +429,9 @@ public class AgoraActivity extends MainCallScreen
             agoraEngine.startPreview();
 
             reason = agoraEngine.joinChannelWithUserAccount(token, channelName, user.getId(), options);
-        } else {
+       /* } else {
             Toast.makeText(getApplicationContext(), "Permissions was not granted", Toast.LENGTH_SHORT).show();
-        }
+        }*/
     }
 
 
@@ -1461,14 +1461,15 @@ public class AgoraActivity extends MainCallScreen
                                 if (response.body().getTeacher() != null) {
                                     setData(teacherModel);
                                     teacher = response.body().getTeacher();
-                                    String[] perms = {Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA};
+                                    createCallAndGetAvadMin("false");
+                                   /* String[] perms = {Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA};
                                     if (EasyPermissions.hasPermissions(AgoraActivity.this, perms)) {
                                         createCallAndGetAvadMin("false");
                                     } else {
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                                             ((Activity) AgoraActivity.this).requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, 0);
                                         }
-                                    }
+                                    }*/
                                 } else {
 
                                     Handler handler = new Handler();

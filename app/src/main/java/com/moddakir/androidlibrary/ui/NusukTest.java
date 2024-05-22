@@ -1,7 +1,6 @@
 package com.moddakir.androidlibrary.ui;
 
 import static com.moddakir.call.view.agora.AgoraActivity.CallRandomTeacher;
-import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -13,7 +12,6 @@ import android.provider.Settings;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.akexorcist.localizationactivity.ui.LocalizationActivity;
 import com.moddakir.call.R;
 import com.moddakir.call.utils.Perference;
@@ -25,7 +23,7 @@ public class NusukTest extends LocalizationActivity implements EasyPermissions.P
     Button callTeacher;
     EditText name,gender,phone,email,language;
     String lang="";
-    String[] perm= {Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA};
+    String perm= Manifest.permission.RECORD_AUDIO;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,20 +36,19 @@ public class NusukTest extends LocalizationActivity implements EasyPermissions.P
         email=findViewById(R.id.email);
         language=findViewById(R.id.language);
         callTeacher.setOnClickListener(view -> {
-            lang=language.getText().toString().toLowerCase();
-            if(lang.equals("ar")||lang.equals("en")||lang.equals("fr")||lang.equals("in")||lang.equals("ur")){
-                setLanguageWithoutNotification( language.getText().toString());
-                Perference.setLang(this,  language.getText().toString());
-            }
+
             if (EasyPermissions.hasPermissions(NusukTest.this, perm)) {
+                lang=language.getText().toString().toLowerCase();
+                if(lang.equals("ar")||lang.equals("en")||lang.equals("fr")||lang.equals("in")||lang.equals("ur")){
+                    setLanguageWithoutNotification( language.getText().toString());
+                    Perference.setLang(this,  language.getText().toString());
                     CallRandomTeacher(NusukTest.this,
                             gender.getText().toString(),
                             name.getText().toString(),
                             phone.getText().toString(),
                             email.getText().toString(),
                             language.getText().toString());
-
-
+                }
             }else {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     ((Activity) NusukTest.this).requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, 0);
