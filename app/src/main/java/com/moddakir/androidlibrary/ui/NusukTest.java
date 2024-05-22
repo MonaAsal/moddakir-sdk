@@ -14,13 +14,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.akexorcist.localizationactivity.ui.LocalizationActivity;
 import com.moddakir.call.R;
+import com.moddakir.call.utils.Perference;
+
 import java.util.List;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class NusukTest extends AppCompatActivity  implements EasyPermissions.PermissionCallbacks {
+public class NusukTest extends LocalizationActivity implements EasyPermissions.PermissionCallbacks {
     Button callTeacher;
     EditText name,gender,phone,email,language;
+    String lang="";
     String[] perm= {Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,10 +38,20 @@ public class NusukTest extends AppCompatActivity  implements EasyPermissions.Per
         email=findViewById(R.id.email);
         language=findViewById(R.id.language);
         callTeacher.setOnClickListener(view -> {
+            lang=language.getText().toString().toLowerCase();
+            if(lang.equals("ar")||lang.equals("en")||lang.equals("fr")||lang.equals("in")||lang.equals("ur")){
+                setLanguageWithoutNotification( language.getText().toString());
+                Perference.setLang(this,  language.getText().toString());
+            }
             if (EasyPermissions.hasPermissions(NusukTest.this, perm)) {
-                CallRandomTeacher(NusukTest.this, gender.getText().toString(),
-                        name.getText().toString(),
-                        phone.getText().toString(),email.getText().toString(),language.getText().toString());
+                    CallRandomTeacher(NusukTest.this,
+                            gender.getText().toString(),
+                            name.getText().toString(),
+                            phone.getText().toString(),
+                            email.getText().toString(),
+                            language.getText().toString());
+
+
             }else {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     ((Activity) NusukTest.this).requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, 0);

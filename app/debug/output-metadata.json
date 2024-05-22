@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.plcoding.androidlibrary",
+  "applicationId": "com.moddakir.call",
   "variantName": "debug",
   "elements": [
     {

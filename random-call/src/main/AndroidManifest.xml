@@ -35,4 +35,20 @@
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+    <application
+        android:allowBackup="true">
+
+
+    <activity
+        android:name="com.moddakir.call.view.agora.AgoraActivity"
+        android:exported="true"
+        android:launchMode="singleInstance"
+        android:screenOrientation="portrait"
+        android:theme="@style/appCompactNoActionBar" />
+    <activity
+        android:name="com.moddakir.call.view.evaluation.TeacherEvaluationActivity"
+        android:exported="true"
+        android:screenOrientation="portrait"
+        android:theme="@style/materialNoActionBar" />
+    </application>
 </manifest>

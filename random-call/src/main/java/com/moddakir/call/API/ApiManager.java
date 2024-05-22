@@ -86,9 +86,9 @@ public class ApiManager {
                 Response response = chain.proceed(request);
                 if (response.code() == 401 || response.code() == 403) {
                     clearData(context);
-                    Intent intent = new Intent(context, AgoraActivity.class);
+                   /* Intent intent = new Intent(context, AgoraActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    context.startActivity(intent);
+                    context.startActivity(intent);*/
                 }
                 return response;
             });

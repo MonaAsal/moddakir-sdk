@@ -11,11 +11,13 @@
     <EditText
         android:layout_width="match_parent"
         android:id="@+id/name"
+        android:text="mona"
         android:hint="enter userName"
         android:layout_height="wrap_content"/>
     <EditText
         android:layout_width="match_parent"
         android:id="@+id/gender"
+        android:text="male"
         android:hint="enter gender"
         android:layout_height="wrap_content"/>
     <EditText
@@ -26,12 +28,14 @@
     <EditText
         android:layout_width="match_parent"
         android:id="@+id/email"
+        android:text="monsa@gmail.com"
         android:hint="enter email"
         android:layout_height="wrap_content"/>
     <EditText
         android:layout_width="match_parent"
         android:id="@+id/language"
         android:hint="enter language"
+        android:text="ar"
         android:layout_height="wrap_content"/>
     <Button
         android:layout_width="match_parent"

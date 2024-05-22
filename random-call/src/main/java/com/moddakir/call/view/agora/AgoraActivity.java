@@ -116,7 +116,7 @@ public class AgoraActivity extends MainCallScreen
     private RecyclerView viewPager;
     String gender,name,phone,email,language;
 
-    Boolean IsConnectRTC = false,isVisible = false,isReachingTheTeacher = false,isHangupByStudent = false,isShowBandMessage = false,isJoined = false, TeacherJoin = false,handlerStopped=false,ismute = false, saveRetryCounts = false,TeacherConnected = false,isspeaker = false,isShowed = false,isEndCallByUser = false;
+    Boolean IsConnectRTC = false,calledBefore=false,isVisible = false,isReachingTheTeacher = false,isHangupByStudent = false,isShowBandMessage = false,isJoined = false, TeacherJoin = false,handlerStopped=false,ismute = false, saveRetryCounts = false,TeacherConnected = false,isspeaker = false,isShowed = false,isEndCallByUser = false;
     CreateCallResponseModel RTCData = null;
     int maxRingDurationMillis,NotAvailable = 0,callDurationSeconds = 0,video_status = 2,reason = 0,maxCallDuration,uid = 0,UDID = 0;;
     private RtmClient mRtmClient;
@@ -558,25 +558,25 @@ public class AgoraActivity extends MainCallScreen
     @Override
     protected void onStart() {
         Bundle ex = getIntent().getExtras();
-        if (ex != null) {
+       if (ex != null) {
             language = ex.getString("language");
-            setLanguageWithoutNotification(language);
             Perference.setLang(this, language);
         }
+
 
         super.onStart();
     }
 
     private void InitViews() {
         Bundle ex = getIntent().getExtras();
-        if (ex != null) {
-           gender = ex.getString("gender");
-             name = ex.getString("name");
-             phone = ex.getString("phone");
-             email = ex.getString("email");
+        if (ex != null&& !calledBefore) {
+            calledBefore=true;
+            gender = ex.getString("gender");
+            name = ex.getString("name");
+            phone = ex.getString("phone");
+            email = ex.getString("email");
             loginSDK(gender, name, phone,email);
         }
-
         mAudioPlayer = new AudioPlayer(this);
         mCallDuration = findViewById(R.id.tv_duration);
         mCallerName1 = findViewById(R.id.remoteUser1);
