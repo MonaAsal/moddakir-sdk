@@ -83,7 +83,7 @@ afterEvaluate {
 
                 groupId = 'com.github.MonaAsal'
                 artifactId = 'moddakir-sdk'
-                version = '1.0'
+                version = '1.3'
             }
         }
     }
