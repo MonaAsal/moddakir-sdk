@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/waitingBlack">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:elevation="5dp"
+        android:id="@+id/clConnecting"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="match_parent">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:background="#E61A1E21"
+            android:layout_height="match_parent"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:id="@+id/ivClose"
+            android:visibility="gone"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:layout_marginTop="20dp"
+            android:padding="@dimen/_5sdp"
+            android:src="@drawable/close"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="wrap_content"/>
+
+
+        <ProgressBar
+            android:layout_width="50dp"
+            android:id="@+id/progress"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/_50sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_height="70dp"/>
+
+        <com.moddakir.call.view.widget.TextViewCalibriBold
+            android:layout_width="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/progress"
+            android:text="@string/please_wait"
+            android:textSize="@dimen/_16sdp"
+            android:id="@+id/please_wait"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/robotobold"
+            android:textColor="@color/color_primary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="wrap_content"/>
+        <com.moddakir.call.view.widget.TextViewUniqueLight
+            android:layout_width="wrap_content"
+            android:text="@string/please_wait_we_re_connecting_you_to_your_teacher"
+            android:textSize="@dimen/_12sdp"
+            android:layout_marginTop="10dp"
+            android:id="@+id/connecting_to_teacher"
+            android:fontFamily="@font/robotolight"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/please_wait"
+            android:textColor="@color/color_primary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="wrap_content"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/connecting_screen"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="50dp"
+            tools:listitem="@layout/connecting_item"
+            android:layout_weight="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_default="percent"
+            app:layout_constraintHeight_percent="0.4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/connecting_to_teacher"/>
+
+
+            <com.moddakir.call.view.widget.TextViewLateefRegOT
+                android:id="@+id/speed_status"
+                android:layout_width="match_parent"
+                android:layout_height="37dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorBusy"
+                android:gravity="center"
+                android:text="@string/internet_speed"
+                android:textColor="@color/colorWhite"
+                android:textSize="16sp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:id="@+id/hang_up"
+                android:layout_marginBottom="40dp"
+                android:background="@drawable/custom_red_rounded_background"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <com.moddakir.call.view.widget.ButtonCalibriBold
+                    android:id="@+id/iv_decline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:adjustViewBounds="true"
+                    android:background="@null"
+                    android:drawableStart="@drawable/hangup_ic"
+                    android:drawablePadding="@dimen/_10sdp"
+                    android:text="@string/hangup"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_16sdp" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

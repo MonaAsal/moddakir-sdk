@@ -1,0 +1,90 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'maven-publish'
+}
+
+android {
+    compileSdk 33
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+        useIR = true
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_version
+        kotlinCompilerVersion '1.5.30'
+    }
+}
+
+dependencies {
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.material:material:$compose_version"
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.security:security-crypto:1.1.0-alpha03'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation "androidx.recyclerview:recyclerview:1.1.0"
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation 'io.agora.rtc:full-sdk:4.2.6'
+    implementation 'io.agora.rtm:rtm-sdk:1.4.9'
+    api "io.reactivex.rxjava2:rxandroid:2.1.1"
+    api "io.reactivex.rxjava2:rxjava:2.2.17"
+    api 'pub.devrel:easypermissions:3.0.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    api 'com.jakewharton.timber:timber:4.7.1'
+    api "com.squareup.retrofit2:converter-gson:2.8.1"
+    api "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
+    api 'de.hdodenhof:circleimageview:3.0.1'
+    api 'com.github.f0ris.sweetalert:library:1.6.2'
+    api "com.squareup.okhttp3:logging-interceptor:4.9.1"
+    api "com.github.chuckerteam.chucker:library:3.5.2"
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'androidx.camera:camera-core:1.0.2'
+    testImplementation 'junit:junit:4.13.2'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.30"
+    api 'com.akexorcist:localization:1.2.11'
+    api "com.squareup.retrofit2:converter-gson:2.8.1"
+    api "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+    implementation 'com.quickbirdstudios:survey:2.0.0-alpha-4'
+    implementation 'com.android.support:support-v4:28.0.0'
+    api 'com.intuit.sdp:sdp-android:1.0.6'
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                groupId = 'com.github.MonaAsal'
+                artifactId = 'moddakir-sdk'
+                version = '1.0'
+            }
+        }
+    }
+}
