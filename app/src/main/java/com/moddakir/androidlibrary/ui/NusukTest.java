@@ -1,6 +1,6 @@
 package com.moddakir.androidlibrary.ui;
 
-import static com.moddakir.call.view.agora.AgoraActivity.CallRandomTeacher;
+import static com.moddakir.call.view.agora.AgoraActivity.makeCall;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.akexorcist.localizationactivity.ui.LocalizationActivity;
 import com.moddakir.call.R;
 import com.moddakir.call.utils.Perference;
-
 import java.util.List;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -42,7 +41,7 @@ public class NusukTest extends LocalizationActivity implements EasyPermissions.P
                 if(lang.equals("ar")||lang.equals("en")||lang.equals("fr")||lang.equals("in")||lang.equals("ur")){
                     setLanguageWithoutNotification( language.getText().toString());
                     Perference.setLang(this,  language.getText().toString());
-                    CallRandomTeacher(NusukTest.this,
+                    makeCall(NusukTest.this,
                             gender.getText().toString(),
                             name.getText().toString(),
                             phone.getText().toString(),

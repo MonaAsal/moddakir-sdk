@@ -547,12 +547,7 @@ public class AgoraActivity extends MainCallScreen
     };
 
     private void setData(User teacherData) {
-        teacher = teacherData;
-        if (teacher != null) {
-            mCallerName1.setText(teacher.GetCalleeName());
-            Utils.loadAvatar(this, teacher.getAvatarurl(), civ_teacher_image);
-            Utils.loadAvatar(this, teacher.getAvatarurl(), civ_teacher_image1);
-        }
+
     }
 
     @Override
@@ -1018,7 +1013,7 @@ public class AgoraActivity extends MainCallScreen
             }
 
         }.start();
-        registerPhoneListener();
+       // registerPhoneListener();
 
 
     }
@@ -1091,29 +1086,12 @@ public class AgoraActivity extends MainCallScreen
     }
 
 
-    private void registerPhoneListener() {
+  /*  private void registerPhoneListener() {
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
-    }
+    }*/
 
-    private PhoneStateListener phoneStateListener = new PhoneStateListener() {
-        @Override
-        public void onCallStateChanged(int state, String incomingNumber) {
 
-            super.onCallStateChanged(state, incomingNumber);
-
-            switch (state) {
-                case TelephonyManager.CALL_STATE_IDLE:
-                    break;
-                case TelephonyManager.CALL_STATE_RINGING:
-                    break;
-                case TelephonyManager.CALL_STATE_OFFHOOK:
-                    break;
-                default:
-                    break;
-            }
-        }
-    };
 
     private void showCallInterruptedMessage(int message) {
         SweetAlertDialog pDialog = new SweetAlertDialog(AgoraActivity.this, SweetAlertDialog.NORMAL_TYPE);
@@ -1459,9 +1437,14 @@ public class AgoraActivity extends MainCallScreen
                             if (response.body().getStatusCode() == 200) {
                                 User teacherModel = new User();
                                 if (response.body().getTeacher() != null) {
-                                    setData(teacherModel);
+                                    teacher = teacherModel;
                                     teacher = response.body().getTeacher();
-                                    createCallAndGetAvadMin("false");
+                                    if (teacher != null) {
+                                        mCallerName1.setText(teacher.GetCalleeName());
+                                        Utils.loadAvatar(AgoraActivity.this, teacher.getAvatarurl(), civ_teacher_image);
+                                        Utils.loadAvatar(AgoraActivity.this, teacher.getAvatarurl(), civ_teacher_image1);
+
+                                    }
                                    /* String[] perms = {Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA};
                                     if (EasyPermissions.hasPermissions(AgoraActivity.this, perms)) {
                                         createCallAndGetAvadMin("false");
@@ -1503,7 +1486,7 @@ public class AgoraActivity extends MainCallScreen
                 });
     }
 
-    public static void CallRandomTeacher(Context context, String gender, String name, String phone,String email,String language) {
+    public static void makeCall(Context context, String gender, String name, String phone,String email,String language) {
         gender= gender.toLowerCase();
         language= language.toLowerCase();
         if(!gender.equals("male")&&!gender.equals("female")){
