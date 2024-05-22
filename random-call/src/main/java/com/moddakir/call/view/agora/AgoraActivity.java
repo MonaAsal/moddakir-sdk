@@ -1013,7 +1013,7 @@ public class AgoraActivity extends MainCallScreen
             }
 
         }.start();
-       // registerPhoneListener();
+      //  registerPhoneListener();
 
 
     }
@@ -1084,12 +1084,6 @@ public class AgoraActivity extends MainCallScreen
                     updateCallDuration(callDurationSeconds));
         }
     }
-
-
-  /*  private void registerPhoneListener() {
-        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
-    }*/
 
 
 
@@ -1443,7 +1437,7 @@ public class AgoraActivity extends MainCallScreen
                                         mCallerName1.setText(teacher.GetCalleeName());
                                         Utils.loadAvatar(AgoraActivity.this, teacher.getAvatarurl(), civ_teacher_image);
                                         Utils.loadAvatar(AgoraActivity.this, teacher.getAvatarurl(), civ_teacher_image1);
-
+                                        createCallAndGetAvadMin("false");
                                     }
                                    /* String[] perms = {Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA};
                                     if (EasyPermissions.hasPermissions(AgoraActivity.this, perms)) {

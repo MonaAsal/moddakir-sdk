@@ -6,6 +6,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +14,10 @@ import android.provider.Settings;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import com.akexorcist.localizationactivity.ui.LocalizationActivity;
 import com.moddakir.call.R;
 import com.moddakir.call.utils.Perference;
@@ -24,6 +29,7 @@ public class NusukTest extends LocalizationActivity implements EasyPermissions.P
     Button callTeacher;
     EditText name,gender,phone,email,language;
     String lang="";
+    private final static int REQUEST_PERMISSION_PHONE_STATE = 1002;
     String perm= Manifest.permission.RECORD_AUDIO;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,4 +89,6 @@ public class NusukTest extends LocalizationActivity implements EasyPermissions.P
                 Uri.parse("package:" + getPackageName()));
         startActivityForResult(intent, 1);
     }
+
+
 }
