@@ -1321,7 +1321,6 @@ public class AgoraActivity extends MainCallScreen
             if(android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
                 validEmail=true;
             }
-
         }
         if (!gender.equals("male") && !gender.equals("female")) {
             Toast.makeText(context, context.getString(R.string.valid_gender), Toast.LENGTH_LONG).show();
@@ -1344,8 +1343,6 @@ public class AgoraActivity extends MainCallScreen
             intent.putExtra("phone", phone);
             context.startActivity(intent);
         }
-
-
     }
 
     @Override
