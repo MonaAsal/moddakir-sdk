@@ -81,7 +81,7 @@ public class TeacherEvaluationActivity extends BaseMVVMActivity<TeacherEvaluatio
 
     @Override
     protected void initViews() {
-        userIsChild = getIntent().getBooleanExtra("isChild", false);
+        userIsChild = false;
         teacherLayout = findViewById(R.id.teacherLayout);
         civTeacherImage = findViewById(R.id.civ_teacher_image);
         tvTeacherName = findViewById(R.id.tv_teacher_name);
@@ -327,7 +327,7 @@ public class TeacherEvaluationActivity extends BaseMVVMActivity<TeacherEvaluatio
         call_id = getIntent().getStringExtra("CALL_ID");
 
         Utils.loadAvatar(this, teacher_avatar, civTeacherImage);
-        tvTeacherName.setText(" - " + teacher_name);
+        tvTeacherName.setText(teacher_name);
 
         //evaluate teacher ...
         smile1EvaluateTeacherClicked();

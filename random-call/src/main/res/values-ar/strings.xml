@@ -34,7 +34,7 @@
     <string name="call_evaluation">ما مدى رضائك عن جودة الاتصال؟</string>
     <string name="teacherRating">تقييم المعلم</string>
     <string name="unAuthentication">لم تتم مصادقته</string>
-    <string name="teacherrating">تقييم المعلم</string>
+    <string name="teacherrating">تقييم المعلم - </string>
     <string name="fromaya"> من الآية :</string>
     <string name="fromsoura">من سورة :</string>
     <string name="connection_evaluation_required">يرجى تقييم الاتصال</string>

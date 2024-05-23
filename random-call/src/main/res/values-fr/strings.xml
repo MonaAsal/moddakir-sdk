@@ -34,7 +34,7 @@
     <string name="call_evaluation">Quel est votre niveau de satisfaction concernant la qualité des appels?</string>
     <string name="teacherRating">TÉvaluation des enseignants</string>
     <string name="unAuthentication">non authentifié</string>
-    <string name="teacherrating">Évaluation des enseignants</string>
+    <string name="teacherrating">Évaluation des enseignants - </string>
     <string name="fromaya">from verse :</string>
     <string name="fromsoura">From Surah :</string>
     <string name="connection_evaluation_required">Veuillez évaluer la connexion</string>
