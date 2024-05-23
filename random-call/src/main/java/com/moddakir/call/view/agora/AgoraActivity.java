@@ -1274,13 +1274,14 @@ public class AgoraActivity extends MainCallScreen
                                     teacher = teacherModel;
                                     teacher = response.body().getTeacher();
                                     if (teacher != null) {
+                                        showMessage(teacher.getFullName());
                                         mCallerName1.setText(teacher.GetCalleeName());
                                         Utils.loadAvatar(AgoraActivity.this, teacher.getAvatarurl(), civ_teacher_image);
                                         Utils.loadAvatar(AgoraActivity.this, teacher.getAvatarurl(), civ_teacher_image1);
                                         createCallAndGetAvadMin("false");
                                     }
                                 } else {
-
+                                    showMessage("no teacher now");
                                     Handler handler = new Handler();
                                     handler.postDelayed(new Runnable() {
                                         public void run() {
