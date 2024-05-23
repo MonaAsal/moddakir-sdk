@@ -70,17 +70,14 @@ dependencies {
     api "com.squareup.retrofit2:adapter-rxjava2:2.3.0"
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation 'com.quickbirdstudios:survey:2.0.0-alpha-4'
-
     implementation 'com.android.support:support-v4:28.0.0'
     api 'com.intuit.sdp:sdp-android:1.0.6'
 }
-
 afterEvaluate {
     publishing {
         publications {
             release(MavenPublication) {
                 from components.release
-
                 groupId = 'com.github.MonaAsal'
                 artifactId = 'moddakir-sdk'
                 version = '1.0'
@@ -88,3 +85,4 @@ afterEvaluate {
         }
     }
 }
+
