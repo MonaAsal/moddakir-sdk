@@ -388,7 +388,7 @@ public class TeacherEvaluationActivity extends BaseMVVMActivity<TeacherEvaluatio
                         dialog.setContentView(R.layout.evaluation_done);
                         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                         ImageView close = dialog.findViewById(R.id.close_iv);
-                        PlayGifView pGif = dialog.findViewById(R.id.viewGif);
+                        PlayGifView pGif = dialog.findViewById(R.id.done_iv);
                         pGif.setImageResource(R.drawable.rate_success);
                         close.setOnClickListener(view -> {
                             dialog.dismiss();
