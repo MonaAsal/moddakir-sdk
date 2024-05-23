@@ -43,6 +43,6 @@
     <string name="name_req">الإسم مطلوب</string>
     <string name="email_req">البريد الالكتروني مطلوب</string>
     <string name="valid_language">الرجاء إدخال لغة صالحة</string>
-
+    <string name="no_teachers">نعتذر عن عدم وجود معلمين الان برجاء المحاولة لاحقا</string>
 
 </resources>

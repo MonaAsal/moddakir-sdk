@@ -2,23 +2,22 @@ package com.moddakir.call.view.agora;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Vibrator;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
@@ -26,8 +25,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
@@ -41,7 +40,6 @@ import com.moddakir.call.Adapters.ConnectingScreenAdapter;
 import com.moddakir.call.Adapters.DotsIndicatorDecoration;
 import com.moddakir.call.Model.BaseResponse;
 import com.moddakir.call.Model.CallLog;
-import com.moddakir.call.Model.Plan.afterCallResponse;
 import com.moddakir.call.Model.User;
 import com.moddakir.call.view.widget.ButtonCalibriBold;
 import com.moddakir.call.SinchEx.AudioPlayer;
@@ -107,25 +105,19 @@ import timber.log.Timber;
 public class AgoraActivity extends MainCallScreen
         implements
         View.OnClickListener {
-    private static final String[] REQUESTED_PERMISSIONS =
-            {
-                    Manifest.permission.RECORD_AUDIO,
-                    Manifest.permission.CAMERA
-            };
-    String channelName = "", isVideo = "false",token = "",LOG_TAG = "AgoraActivity";
+    private static final String[] REQUESTED_PERMISSIONS = {Manifest.permission.RECORD_AUDIO};
+    String channelName = "", isVideo = "false", token = "", LOG_TAG = "AgoraActivity";
     private RecyclerView viewPager;
-    String gender,name,phone,email,language;
-
-    Boolean IsConnectRTC = false,calledBefore=false,isVisible = false,isReachingTheTeacher = false,isHangupByStudent = false,isShowBandMessage = false,isJoined = false, TeacherJoin = false,handlerStopped=false,ismute = false, saveRetryCounts = false,TeacherConnected = false,isspeaker = false,isShowed = false,isEndCallByUser = false;
+    String gender, name, phone, email, language;
+    Boolean IsConnectRTC = false, isVisible = false, isReachingTheTeacher = false, isHangupByStudent = false, isShowBandMessage = false, isJoined = false, TeacherJoin = false, handlerStopped = false, ismute = false, saveRetryCounts = false, TeacherConnected = false, isspeaker = false, isShowed = false, isEndCallByUser = false;
     CreateCallResponseModel RTCData = null;
-    int maxRingDurationMillis,NotAvailable = 0,callDurationSeconds = 0,video_status = 2,reason = 0,maxCallDuration,uid = 0,UDID = 0;;
+    int maxRingDurationMillis, NotAvailable = 0, callDurationSeconds = 0, video_status = 2, reason = 0, maxCallDuration, uid = 0, UDID = 0;
+    ;
     private RtmClient mRtmClient;
     private RtmChannel mRtmChannel;
     ConstraintLayout clConnecting;
-    RelativeLayout rlCamera,errorRelative, succesRelative;
-    FrameLayout vRemoteVideo;
-    User teacher,user;
-    //ShineButton shineButton;
+    RelativeLayout errorRelative, succesRelative;
+    User teacher, user;
     Disposable disposable;
     private final double publishAudioLosePercentage = 0;
     private final double publishVideoLosePercentage = 0;
@@ -135,17 +127,16 @@ public class AgoraActivity extends MainCallScreen
     private CircleImageView civ_teacher_image1, civ_teacher_image;
     private FrameLayout warning_frame;
     private TextViewUniqueLight mCallDuration;
-    private TextViewCalibriBold mCallerName1, tvCamera;
+    private TextViewCalibriBold mCallerName1;
 
     private ButtonCalibriBold btnEndCall;
 
     LinearLayout hang_up;
-    private ImageButton btnMute, btnSpeaker, btnCamera, btnEndCall1;
+    private ImageButton btnMute, btnSpeaker, btnEndCall1;
 
     private View vOnCall, vCalling;
 
     private Timer mTimer;
-    // for close camera streams
     private ConsumedPakageResponseModel consumedPakageResponseModel;
     private TextViewLateefRegOT speed_status, tv_internet_status;
     private SweetAlertDialog pDialog, countDownDialog;
@@ -163,10 +154,10 @@ public class AgoraActivity extends MainCallScreen
         @Override
         // Listen for the remote host joining the channel to get the uid of the host.
         public void onUserJoined(int uid, int elapsed) {
-            // showMessage("Remote user joined " + uid);
+
             TeacherJoin = true;
             mAudioPlayer.stopProgressTone();
-            runOnUiThread(() -> setupRemoteVideo(uid));
+           // runOnUiThread(() -> setupRemoteVideo(uid));
             civ_teacher_image1.setVisibility(View.VISIBLE);
             runOnUiThread(() ->
             {
@@ -185,8 +176,6 @@ public class AgoraActivity extends MainCallScreen
 
         @Override
         public void onError(int err) {
-
-
             super.onError(err);
             SendErrorCode(reason);
             state = STATE.ERORR;
@@ -231,7 +220,6 @@ public class AgoraActivity extends MainCallScreen
             } catch (Exception e) {
 
             }
-            //on Connected
         }
 
         @Override
@@ -260,12 +248,8 @@ public class AgoraActivity extends MainCallScreen
 
     private void handleView() {
         mAudioPlayer.stopProgressTone();
-        runOnUiThread(() -> setupRemoteVideo(uid));
+       // runOnUiThread(() -> setupRemoteVideo(uid));
         civ_teacher_image1.setVisibility(View.VISIBLE);
-        vRemoteVideo.removeAllViews();
-        vRemoteVideo.setBackgroundColor
-                (ContextCompat.getColor(AgoraActivity.this, R.color.colorPrimaryOpacity));
-
         runOnUiThread(() ->
         {
             vOnCall.setVisibility(View.VISIBLE);
@@ -341,7 +325,6 @@ public class AgoraActivity extends MainCallScreen
                         if (response.isSuccessful() && response.body() != null) {
                             Log.e("CREATE_CALL_RESPONSE", new Gson().toJson(response.body()));
                             if (response.body().getStatusCode() == 417) {
-                              //  showUnFreezeAccountDialog();
                             } else if (response.body().getStatusCode() == 200) {
                                 response.body().getRingingDuration();
                                 setupSignaling(response.body().getCallApiKey(), response.body().getStudentSignalingToken());
@@ -362,15 +345,13 @@ public class AgoraActivity extends MainCallScreen
                                 playEndCallSound();
                                 finish();
                             } else {
-
-                                Toast.makeText(AgoraActivity.this, response.body().getMessage(), Toast.LENGTH_LONG).show();
                                 onServiceDisconnected(true);
                             }
                         } else {
-                            Toast.makeText(AgoraActivity.this, getResources().getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                            showMessage(getResources().getString(R.string.server_error));
                             onServiceDisconnected(true);
                         }
-//                        alertDialog.dismiss();
+//
                     }
 
                     @Override
@@ -378,19 +359,15 @@ public class AgoraActivity extends MainCallScreen
 
                         Log.e("exception", e.toString());
                         if (e instanceof java.net.ConnectException || e instanceof java.net.UnknownHostException || e instanceof SocketTimeoutException) {
-                            Toast.makeText(AgoraActivity.this, getResources().getString(R.string.internetConnectionError), Toast.LENGTH_LONG).show();
+                            showMessage(getResources().getString(R.string.internetConnectionError));
                         }
                         onServiceDisconnected(true);
-//                        alertDialog.dismiss();
                     }
                 });
 
 
     }
 
-    /**
-     * create log file for every call to make check up fail call occurs  and send file to backend using call id
-     */
     private void startCall(CreateCallResponseModel createCallResponse) {
         Timber.i("startCall: " + new Gson().toJson(createCallResponse));
         if (createCallResponse.getEnableCallLogs()) {
@@ -409,29 +386,20 @@ public class AgoraActivity extends MainCallScreen
         Timber.v("Call info " + callLog.getCid());
         if (consumedPakageResponseModel != null && consumedPakageResponseModel.getRemainingMinitues() > 0) {
             CallUserSinch();
-            // connectToRTC();
-
         } else {
 
             Toast.makeText(AgoraActivity.this, getResources().getString(R.string.dont_have_balance), Toast.LENGTH_LONG).show();
             onServiceDisconnected(true);
         }
-
     }
 
     private void connectToRTC() {
-       // if (checkSelfPermission()) {
-            ChannelMediaOptions options = new ChannelMediaOptions();
-            options.autoSubscribeAudio = true;
-            options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
-            options.channelProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING;
-
-            agoraEngine.startPreview();
-
-            reason = agoraEngine.joinChannelWithUserAccount(token, channelName, user.getId(), options);
-       /* } else {
-            Toast.makeText(getApplicationContext(), "Permissions was not granted", Toast.LENGTH_SHORT).show();
-        }*/
+        ChannelMediaOptions options = new ChannelMediaOptions();
+        options.autoSubscribeAudio = true;
+        options.clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
+        options.channelProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING;
+        agoraEngine.startPreview();
+        reason = agoraEngine.joinChannelWithUserAccount(token, channelName, user.getId(), options);
     }
 
 
@@ -444,21 +412,6 @@ public class AgoraActivity extends MainCallScreen
 
     private void updateCallDuration(int seconds) {
         runOnUiThread(() -> mCallDuration.setText(formatTimeSpan(seconds)));
-        if (consumedPakageResponseModel != null) {
-            float difftime = (consumedPakageResponseModel.getRemainingMinitues() * 60)
-                    - (seconds);
-            double t = ((consumedPakageResponseModel.getTotalMinitues() * 60) * 0.1);
-            Log.e("difftime", difftime + "");
-            if (difftime <= t && !isShowed) {
-                // showBalanceAlertWarnning();
-                isShowed = true;
-            }
-            if (difftime <= 0) {
-                isEndCallByUser = true;
-                state = STATE.CANCELLED;
-                endCall();
-            }
-        }
     }
 
     @Override
@@ -466,7 +419,7 @@ public class AgoraActivity extends MainCallScreen
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agora);
-
+        addOverlay();
         CallStatus.userCallStatus = CallStatus.CALL_STATUS.IN_CALL;
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mAudioPlayer = new AudioPlayer(this);
@@ -478,14 +431,11 @@ public class AgoraActivity extends MainCallScreen
         state = STATE.INIT;
         user = AccountPreference.getUser(AgoraActivity.this);
         InitViews();
-
-
         disposable = Observable.timer(3, TimeUnit.SECONDS).repeat().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).
                 subscribe(aLong -> {
                     double max = Utils.MaxNumber(publishAudioLosePercentage, publishVideoLosePercentage, subscribAudioLosePercentage, subscribVideoLosePercentage);
                     Log.e("LOSTPACKET", max + "");
                     if (max < 1.8 && max >= 0) {
-
                         //good
                         tv_internet_status.setText(com.moddakir.call.R.string.internet_speed_good);
                         tv_internet_status.setBackgroundResource(R.color.colorPrimary);
@@ -546,32 +496,18 @@ public class AgoraActivity extends MainCallScreen
         }
     };
 
-    private void setData(User teacherData) {
-
-    }
-
     @Override
     protected void onStart() {
         Bundle ex = getIntent().getExtras();
-       if (ex != null) {
+        if (ex != null) {
             language = ex.getString("language");
             Perference.setLang(this, language);
         }
-
-
         super.onStart();
     }
 
     private void InitViews() {
-        Bundle ex = getIntent().getExtras();
-        if (ex != null&& !calledBefore) {
-            calledBefore=true;
-            gender = ex.getString("gender");
-            name = ex.getString("name");
-            phone = ex.getString("phone");
-            email = ex.getString("email");
-            loginSDK(gender, name, phone,email);
-        }
+
         mAudioPlayer = new AudioPlayer(this);
         mCallDuration = findViewById(R.id.tv_duration);
         mCallerName1 = findViewById(R.id.remoteUser1);
@@ -590,14 +526,7 @@ public class AgoraActivity extends MainCallScreen
         AppCompatImageView ivClose = findViewById(R.id.ivClose);
         errorRelative = findViewById(R.id.error_relative);
         succesRelative = findViewById(R.id.success_relative);
-        //shineButton = findViewById(R.id.likebutton);
-        //VideoCall
-        vRemoteVideo = findViewById(R.id.v_remote_video);
         warning_frame = findViewById(R.id.warning_frame);
-        rlCamera = findViewById(R.id.rel3);
-        btnCamera = findViewById(R.id.iv_camera);
-        tvCamera = findViewById(R.id.tv_camera);
-
         re1 = findViewById(R.id.re1);
         rel2 = findViewById(R.id.rel2);
         rl_decline = findViewById(R.id.rl_decline);
@@ -608,17 +537,16 @@ public class AgoraActivity extends MainCallScreen
             hang_up.setOnClickListener(this);
             btnMute.setOnClickListener(this);
             btnSpeaker.setOnClickListener(this);
-            btnCamera.setOnClickListener(this);
         });
 
     }
 
-    private void setupViewPager(RecyclerView recyclerView) {
+    private void showingConnectingBanners(RecyclerView recyclerView) {
         (new ApiManager(AgoraActivity.this).getUserCalls(true)).getSdkBanners()
                 .subscribeOn(Schedulers.io()) // “work” on io thread
                 .observeOn(AndroidSchedulers.mainThread()) // “listen” on UIThread
                 .map(responseModel -> responseModel)
-                .subscribe(new DisposableSingleObserver<Response<ConnectingBannersResponse>>()  {
+                .subscribe(new DisposableSingleObserver<Response<ConnectingBannersResponse>>() {
                     @Override
                     public void onSuccess(Response<ConnectingBannersResponse> response) {
                         if (response.isSuccessful() && response.body() != null) {
@@ -657,9 +585,7 @@ public class AgoraActivity extends MainCallScreen
             isEndCallByUser = true;
             state = STATE.CANCELLED;
             endCall();
-            getAfterCallData();
             try {
-                // logout();
                 agoraEngine.leaveChannel();
                 new Thread(() -> {
                     RtcEngine.destroy();
@@ -675,7 +601,6 @@ public class AgoraActivity extends MainCallScreen
             isEndCallByUser = true;
             endCall();
             try {
-                // logout();
                 agoraEngine.leaveChannel();
                 new Thread(() -> {
                     RtcEngine.destroy();
@@ -685,39 +610,11 @@ public class AgoraActivity extends MainCallScreen
             } catch (Exception e) {
 
             }
-            getAfterCallData();
         } else if (id == R.id.iv_mute) {
             changeMute();
         } else if (id == R.id.iv_speaker) {
             changeSpeaker();
         }
-    }
-
-    private void showAfterCallDialog(Response<afterCallResponse> response) {
-        Dialog dialog = new Dialog(AgoraActivity.this);
-        dialog.setCancelable(false);
-        dialog.setContentView(R.layout.after_call_dialog);
-        TextView btn_yes = dialog.findViewById(R.id.btn_yes);
-        TextView btn_no = dialog.findViewById(R.id.btn_no);
-        TextView fromSurah = dialog.findViewById(R.id.from_surah_tv);
-        TextView toSurah = dialog.findViewById(R.id.to_surah_tv);
-        TextView fromAya = dialog.findViewById(R.id.from_aya_tv);
-        TextView toAya = dialog.findViewById(R.id.to_aya_tv);
-        fromSurah.setText(response.body().getItems().get(0).getFromSurah());
-        toSurah.setText(response.body().getItems().get(0).getToSurah());
-        fromAya.setText(response.body().getItems().get(0).getFromAyah());
-        toAya.setText(response.body().getItems().get(0).getToAyah());
-        btn_yes.setOnClickListener(v -> {
-            // sendAfterCallData();
-            Toast.makeText(getApplicationContext(), "yes", Toast.LENGTH_SHORT).show();
-            dialog.dismiss();
-        });
-        btn_no.setOnClickListener(v -> {
-            //sendAfterCallData();
-            Toast.makeText(getApplicationContext(), "no", Toast.LENGTH_SHORT).show();
-            dialog.dismiss();
-        });
-        dialog.show();
     }
 
     private void SendErrorCode(int reason) {
@@ -730,42 +627,10 @@ public class AgoraActivity extends MainCallScreen
                 .map(responseModel -> responseModel)
                 .subscribe(new DisposableSingleObserver<BaseResponse>() {
                     @Override
-                    public void onSuccess(@NonNull BaseResponse freezeAccountResponseModel) {
-                        // Toast.makeText(AgoraActivity.this, "onSuccess   :  "+reason, Toast.LENGTH_LONG).show();
-                    }
+                    public void onSuccess(@NonNull BaseResponse freezeAccountResponseModel) {}
 
                     @Override
-                    public void onError(@NonNull Throwable e) {
-
-                    }
-                });
-    }
-
-    private void getAfterCallData() {
-        Timber.tag("getAfterCallData").e("AfterCallData");
-        HashMap<String, Object> map = new HashMap<>();
-        if (callLog != null) map.put("callId", callLog.getCid());
-        (new ApiManager(AgoraActivity.this).getUserCalls(true)).GetDataAfterCall(map)
-                .subscribeOn(Schedulers.io()) // “work” on io thread
-                .observeOn(AndroidSchedulers.mainThread()) // “listen” on UIThread
-                .map(responseModel -> responseModel)
-                .subscribe(new DisposableSingleObserver<Response<afterCallResponse>>() {
-                    @Override
-                    public void onSuccess(Response<afterCallResponse> response) {
-                        if (response.isSuccessful() && response.body() != null) {
-                            Timber.e(new Gson().toJson(response.body()));
-                            if (response.body().getStatusCode().equals("200")) {
-                                showAfterCallDialog(response);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Timber.tag("exception_update_s").e(e.toString());
-                        if (e instanceof java.net.ConnectException || e instanceof java.net.UnknownHostException || e instanceof SocketTimeoutException) {
-                        }
-                    }
+                    public void onError(@NonNull Throwable e) {}
                 });
     }
 
@@ -773,7 +638,6 @@ public class AgoraActivity extends MainCallScreen
         btnEndCall.setVisibility(View.GONE);
         btnEndCall1.setVisibility(View.GONE);
         btnSpeaker.setVisibility(View.GONE);
-        btnCamera.setVisibility(View.GONE);
         btnMute.setVisibility(View.GONE);
         rel2.setVisibility(View.GONE);
         re1.setVisibility(View.GONE);
@@ -790,7 +654,7 @@ public class AgoraActivity extends MainCallScreen
     }
 
     private void endCall() {
-        handlerStopped=true;
+        handlerStopped = true;
         SendMsg("endCall");
         Log.e("CallDurationStudent", callDurationSeconds + "");
         HideButtons();
@@ -817,23 +681,19 @@ public class AgoraActivity extends MainCallScreen
         status = STATUS.ENDED;
         if (state == STATE.NO_ANSWER) {
             requestUpdateCall("NO_ANSWER");
-            showAplogizeMessage(R.string.apologize);
+            showApologizeMessage(R.string.apologize);
             return;
         }
         if (state == STATE.ERORR || state == STATE.INIT || state == STATE.DENIED && !isReachingTheTeacher) {
-            showAplogizeMessage(R.string.apologize);
+            showApologizeMessage(R.string.apologize);
             return;
         }
         if (state == STATE.CANCELLED) {
             if (callDurationSeconds >= 30) {
                 requestUpdateCall("HUNG_UP");
-                Timber.v("duration " + callDurationSeconds);
-
                 TeacherEvaluationActivity.start
                         (this, teacher.getId(), teacher.getFullName(), callLog.getCid(), teacher.getAvatarurl(), AccountPreference.getUser(AgoraActivity.this));
                 finish();
-                Log.d("checkkkkk", "step3");
-
             } else {
                 requestUpdateCall("HUNG_UP");
                 onServiceDisconnected(false);
@@ -850,13 +710,10 @@ public class AgoraActivity extends MainCallScreen
         } catch (Exception e) {
 
         }
-
     }
 
     @Override
     protected void onDestroy() {
-
-        // LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         CallStatus.userCallStatus = CallStatus.CALL_STATUS.IDLE;
         if (startTeacherNotAvailable != null) startTeacherNotAvailable.cancel();
 
@@ -958,9 +815,7 @@ public class AgoraActivity extends MainCallScreen
         ringDurationCountDown = new CountDownTimer(maxRingDurationMillis, 1000) {
             public void onTick(long millisUntilFinished) {
                 Log.e("RingDurationCountDown", String.valueOf(millisUntilFinished / 1000));
-
             }
-
             public void onFinish() {
                 state = STATE.NO_ANSWER;
                 endCall();
@@ -970,29 +825,26 @@ public class AgoraActivity extends MainCallScreen
 
     private void CallUserSinch() {
         if (status == STATUS.ENDED && isEndCallByUser) {
-
             requestUpdateCall("CANCELED");
             return;
         } else if (status == STATUS.ENDED) {
             return;
         }
-        Log.e("CallUserSinch", "CallUserSinch");
-
-            if (teacher != null) {
-                mCallerName1.setText(teacher.GetCalleeName());
-                Utils.loadAvatar(this, teacher.getAvatarurl(), civ_teacher_image);
-                Utils.loadAvatar(this, teacher.getAvatarurl(), civ_teacher_image1);
-                User user = AccountPreference.getUser(AgoraActivity.this);
-                if (user != null) {
-                    Map<String, String> headers = new HashMap<>();
-                    if (user.getAvatarurl() != null && !user.getAvatarurl().trim().isEmpty())
-                        headers.put("avatarUrl", user.getAvatarurl());
-                    headers.put("displayName", user.GetCalleeName());
-                    headers.put("isVideo", isVideo);
-                    if (callLog != null) {
-                        headers.put("callId", callLog.getCid());
-                    }
+        if (teacher != null) {
+            mCallerName1.setText(teacher.GetCalleeName());
+            Utils.loadAvatar(this, teacher.getAvatarurl(), civ_teacher_image);
+            Utils.loadAvatar(this, teacher.getAvatarurl(), civ_teacher_image1);
+            User user = AccountPreference.getUser(AgoraActivity.this);
+            if (user != null) {
+                Map<String, String> headers = new HashMap<>();
+                if (user.getAvatarurl() != null && !user.getAvatarurl().trim().isEmpty())
+                    headers.put("avatarUrl", user.getAvatarurl());
+                headers.put("displayName", user.GetCalleeName());
+                headers.put("isVideo", isVideo);
+                if (callLog != null) {
+                    headers.put("callId", callLog.getCid());
                 }
+            }
 
         }
         LogFile.d(LOG_TAG, "onConnectedSession");
@@ -1013,18 +865,14 @@ public class AgoraActivity extends MainCallScreen
             }
 
         }.start();
-      //  registerPhoneListener();
-
-
     }
 
     private void backToHomePage() {
         CallStatus.userCallStatus = CallStatus.CALL_STATUS.IDLE;
-
         finish();
     }
 
-    private void showAplogizeMessage(int message) {
+    private void showApologizeMessage(int message) {
         if (!((Activity) AgoraActivity.this).isFinishing())
             return;
         SweetAlertDialog pDialog = new SweetAlertDialog(AgoraActivity.this, SweetAlertDialog.NORMAL_TYPE);
@@ -1071,8 +919,6 @@ public class AgoraActivity extends MainCallScreen
     }
 
     private enum STATUS {INIT, RING, INCALL, ENDED}
-
-
     private enum STATE {INIT, ENDED, ERORR, CANCELLED, NO_ANSWER, DENIED, NOTAVA}
 
     private class UpdateCallDurationTask extends TimerTask {
@@ -1084,7 +930,6 @@ public class AgoraActivity extends MainCallScreen
                     updateCallDuration(callDurationSeconds));
         }
     }
-
 
 
     private void showCallInterruptedMessage(int message) {
@@ -1137,7 +982,6 @@ public class AgoraActivity extends MainCallScreen
                 @Override
                 public void onConnectionStateChanged(int state, int reason) {
                 }
-
                 @Override
                 public void onImageMessageReceivedFromPeer(RtmImageMessage rtmImageMessage, String s) {
                 }
@@ -1176,25 +1020,17 @@ public class AgoraActivity extends MainCallScreen
 
                 @Override
                 public void onFailure(ErrorInfo errorInfo) {
-                   // CharSequence text = "User: " + user.getId() + " failed to log in to Signaling!" + errorInfo.toString();
-                    int duration = Toast.LENGTH_SHORT;
+                     CharSequence text = "User: " + user.getId() + " failed to log in to Signaling!" + errorInfo.toString();
                 }
             });
 
 
         } catch (Exception e) {
-            String s=e.getMessage();
+            String s = e.getMessage();
         }
 
     }
 
-    private boolean checkSelfPermission() {
-        if (ContextCompat.checkSelfPermission(this, REQUESTED_PERMISSIONS[0]) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, REQUESTED_PERMISSIONS[1]) != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }
-        return true;
-    }
 
     public void JoinSignalingChannel() {
         RtmChannelListener mRtmChannelListener = new RtmChannelListener() {
@@ -1246,7 +1082,7 @@ public class AgoraActivity extends MainCallScreen
                         warning_frame.setBackgroundColor(getResources().getColor(R.color.transparent));
 
                         succesRelative.setVisibility(View.VISIBLE);
-                       // shineButton.callOnClick();
+                        // shineButton.callOnClick();
                     });
 
                     Observable.timer(3, TimeUnit.SECONDS).subscribe(aLong -> {
@@ -1321,10 +1157,8 @@ public class AgoraActivity extends MainCallScreen
         };
 
         try {
-            // Create an <Vg k="MESS" /> channel
             mRtmChannel = mRtmClient.createChannel(channelName, mRtmChannelListener);
         } catch (RuntimeException e) {
-            showMessage(e.getMessage());
         }
         mRtmChannel.join(new ResultCallback<Void>() {
             @Override
@@ -1335,7 +1169,7 @@ public class AgoraActivity extends MainCallScreen
                         .subscribeOn(Schedulers.io()) // “work” on io thread
                         .observeOn(AndroidSchedulers.mainThread()) // “listen” on UIThread
                         .map(responseModel -> responseModel)
-                        .subscribe(new DisposableSingleObserver<Response<BaseResponse>>()  {
+                        .subscribe(new DisposableSingleObserver<Response<BaseResponse>>() {
                             @Override
                             public void onSuccess(Response<BaseResponse> response) {
                                 if (response.isSuccessful() && response.body() != null) {
@@ -1386,13 +1220,13 @@ public class AgoraActivity extends MainCallScreen
         HashMap<String, Object> map = new HashMap<>();
         map.put("gender", gender);
         map.put("fullName", name);
-       // map.put("phone", phone);
-        map.put("email",email);
+        // map.put("phone", phone);
+        map.put("email", email);
         (new ApiManager(AgoraActivity.this).getUserCalls(false)).loginToSdk(map)
                 .subscribeOn(Schedulers.io()) // “work” on io thread
                 .observeOn(AndroidSchedulers.mainThread()) // “listen” on UIThread
                 .map(responseModel -> responseModel)
-                .subscribe(new DisposableSingleObserver<Response<LoginResponseModel>>()  {
+                .subscribe(new DisposableSingleObserver<Response<LoginResponseModel>>() {
                     @Override
                     public void onSuccess(Response<LoginResponseModel> response) {
                         if (response.isSuccessful() && response.body() != null) {
@@ -1400,12 +1234,12 @@ public class AgoraActivity extends MainCallScreen
                             if (response.body().getStatusCode() == 200) {
                                 User currentUser = response.body().getStudent();
                                 currentUser.setAccessToken(response.body().getAccessToken());
-                                AccountPreference.registerData(currentUser,AgoraActivity.this);
-                                user=currentUser;
+                                AccountPreference.registerData(currentUser, AgoraActivity.this);
+                                user = currentUser;
                                 getRandomTeacher();
                                 viewPager = findViewById(R.id.connecting_screen);
                                 viewPager.setLayoutManager(new LinearLayoutManager(AgoraActivity.this, LinearLayoutManager.HORIZONTAL, true));
-                                setupViewPager(viewPager);
+                                showingConnectingBanners(viewPager);
                             }
                         }
                     }
@@ -1423,7 +1257,7 @@ public class AgoraActivity extends MainCallScreen
                 .subscribeOn(Schedulers.io()) // “work” on io thread
                 .observeOn(AndroidSchedulers.mainThread()) // “listen” on UIThread
                 .map(responseModel -> responseModel)
-                .subscribe(new DisposableSingleObserver<Response<RandomTeacherResponseModel>>()  {
+                .subscribe(new DisposableSingleObserver<Response<RandomTeacherResponseModel>>() {
                     @Override
                     public void onSuccess(Response<RandomTeacherResponseModel> response) {
                         if (response.isSuccessful() && response.body() != null) {
@@ -1439,20 +1273,12 @@ public class AgoraActivity extends MainCallScreen
                                         Utils.loadAvatar(AgoraActivity.this, teacher.getAvatarurl(), civ_teacher_image1);
                                         createCallAndGetAvadMin("false");
                                     }
-                                   /* String[] perms = {Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA};
-                                    if (EasyPermissions.hasPermissions(AgoraActivity.this, perms)) {
-                                        createCallAndGetAvadMin("false");
-                                    } else {
-                                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                            ((Activity) AgoraActivity.this).requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, 0);
-                                        }
-                                    }*/
                                 } else {
 
                                     Handler handler = new Handler();
                                     handler.postDelayed(new Runnable() {
                                         public void run() {
-                                            if(!handlerStopped){
+                                            if (!handlerStopped) {
                                                 if (!saveRetryCounts) {
                                                     int retryDuration = response.body().getRetryDuration();
                                                     NotAvailable = retryDuration / 10;
@@ -1462,7 +1288,7 @@ public class AgoraActivity extends MainCallScreen
                                                     getRandomTeacher();
                                                     NotAvailable--;
                                                 } else {
-                                                    Toast.makeText(AgoraActivity.this, "no teachers available", Toast.LENGTH_LONG).show();
+                                                    showMessage(getResources().getString(R.string.no_teachers));
                                                     finish();
                                                 }
                                             }
@@ -1480,23 +1306,18 @@ public class AgoraActivity extends MainCallScreen
                 });
     }
 
-    public static void makeCall(Context context, String gender, String name, String phone,String email,String language) {
-        gender= gender.toLowerCase();
-        language= language.toLowerCase();
-        if(!gender.equals("male")&&!gender.equals("female")){
+    public static void makeCall(Context context, String gender, String name, String phone, String email, String language) {
+        gender = gender.toLowerCase();
+        language = language.toLowerCase();
+        if (!gender.equals("male") && !gender.equals("female")) {
             Toast.makeText(context, context.getString(R.string.valid_gender), Toast.LENGTH_LONG).show();
-        }
-        else if(name.isEmpty()){
+        } else if (name.isEmpty()) {
             Toast.makeText(context, context.getString(R.string.name_req), Toast.LENGTH_LONG).show();
-        }
-        else if(email.isEmpty()){
+        } else if (email.isEmpty()) {
             Toast.makeText(context, context.getString(R.string.email_req), Toast.LENGTH_LONG).show();
-        }
-
-        else if(!language.equals("ar")&&!language.equals("en")&&!language.equals("fr")&&!language.equals("in")&&!language.equals("ur")){
+        } else if (!language.equals("ar") && !language.equals("en") && !language.equals("fr") && !language.equals("in") && !language.equals("ur")) {
             Toast.makeText(context, context.getString(R.string.valid_language), Toast.LENGTH_LONG).show();
-        }
-        else {
+        } else {
             Intent intent = new Intent(context, AgoraActivity.class);
             intent.putExtra("language", language);
             intent.putExtra("email", email);
@@ -1509,4 +1330,67 @@ public class AgoraActivity extends MainCallScreen
 
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (EasyPermissions.hasPermissions(AgoraActivity.this, REQUESTED_PERMISSIONS)) {
+            StartSdk();
+
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 100);
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    public void addOverlay() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(this)) {
+                askDrawPermission();
+            } else {
+                StartSdk();
+            }
+        } else {
+            StartSdk();
+        }
+    }
+
+    @TargetApi(23)
+    public void askDrawPermission() {
+        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                Uri.parse("package:" + getPackageName()));
+        startActivityForResult(intent, 1);
+    }
+
+    private void StartSdk() {
+        Bundle ex = getIntent().getExtras();
+        if (ex != null) {
+            gender = ex.getString("gender");
+            name = ex.getString("name");
+            phone = ex.getString("phone");
+            email = ex.getString("email");
+
+            if (EasyPermissions.hasPermissions(AgoraActivity.this, REQUESTED_PERMISSIONS)) {
+                loginSDK(gender, name, phone, email);
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, 100);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                addOverlay();
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                addOverlay();
+            }
+        }
+    }
 }

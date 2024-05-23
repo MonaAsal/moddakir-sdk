@@ -44,7 +44,7 @@ public class MainCallScreen extends BaseActivity implements SensorEventListener 
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.e("ONCREATE ", "MainCallScreen");
-        addOverlay();
+
         sensorController = new SensorController();
         mProximity = sensorController.getProximityInstance(this);
         wakeLock = sensorController.getWakelockInsatance(this);
@@ -69,7 +69,7 @@ public class MainCallScreen extends BaseActivity implements SensorEventListener 
             granted &= grantResult == PackageManager.PERMISSION_GRANTED;
         }
         if (granted) {
-            Toast.makeText(this, "", Toast.LENGTH_LONG).show();
+           // Toast.makeText(this, "", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(this, getResources().getString(R.string.permission_request), Toast.LENGTH_LONG).show();
         }
