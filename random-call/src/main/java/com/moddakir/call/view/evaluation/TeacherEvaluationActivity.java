@@ -383,7 +383,7 @@ public class TeacherEvaluationActivity extends BaseMVVMActivity<TeacherEvaluatio
                     if (response.fetchData().getStatusCode() == 200) {
                         final Dialog dialog = new Dialog(this);
                         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        dialog.setCancelable(true);
+                        dialog.setCancelable(false);
                         dialog.setContentView(R.layout.evaluation_done);
                         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                         ImageView close = dialog.findViewById(R.id.close_iv);

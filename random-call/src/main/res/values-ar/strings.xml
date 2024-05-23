@@ -1,17 +1,16 @@
 <resources>
     <string name="are_you_achieving_your_goal_with_this_amount_of_your_plan">Are you achieving your goal with this amount of your plan?</string>
-    <string name="please_wait_we_re_connecting_you_to_your_teacher">نحن نوصلك بمعلمك..</string>
-    <string name="please_wait">نرجو الإنتظار</string>
+    <string name="please_wait_we_re_connecting_you_to_your_teacher">جاري الاتصال بمعلمك..</string>
+    <string name="please_wait">برجاء الانتظار</string>
     <string name="hangup">اغلاق المكالمة</string>
     <string name="confirm">تاكيد</string>
-    <string name="thank_you_for_your_rating">شكرا لتقييمك</string>
-    <string name="response_recorded">تم تسجيل التقييم</string>
-
+    <string name="thank_you_for_your_rating">شكرا لتقييمكم</string>
+    <string name="response_recorded">تم تسجيل الرد</string>
     <string name="sendError_text">انتبه</string>
     <string name="sendScuc_text">احسنت</string>
     <string name="internet_speed">سرعة الإنترنت</string>
-    <string name="speaker">مكبر\nالصوت</string>
-    <string name="mute">كتم\nالصوت</string>
+    <string name="speaker">مكبرالصوت</string>
+    <string name="mute">الميكروفون</string>
     <string name="internet_speed_low">سرعه الانترنت ضعيف</string>
     <string name="no_internet_speed">عذرا لايوجد اتصال بالانترنت</string>
     <string name="pause">إيقاف</string>
@@ -43,6 +42,7 @@
     <string name="name_req">الإسم مطلوب</string>
     <string name="email_req">البريد الالكتروني مطلوب</string>
     <string name="valid_language">الرجاء إدخال لغة صالحة</string>
+    <string name="valid_email">الرجاء إدخال بريد الكترونى صالح</string>
     <string name="no_teachers">نعتذر عن عدم وجود معلمين الان برجاء المحاولة لاحقا</string>
 
 </resources>

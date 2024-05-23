@@ -18,6 +18,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
@@ -44,6 +45,7 @@ import com.moddakir.call.Model.User;
 import com.moddakir.call.view.widget.ButtonCalibriBold;
 import com.moddakir.call.SinchEx.AudioPlayer;
 import com.moddakir.call.SinchEx.MainCallScreen;
+import com.moddakir.call.view.widget.PlayGifView;
 import com.moddakir.call.view.widget.TextViewCalibriBold;
 import com.moddakir.call.view.widget.TextViewLateefRegOT;
 import com.moddakir.call.view.widget.TextViewUniqueLight;
@@ -71,6 +73,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -530,6 +534,8 @@ public class AgoraActivity extends MainCallScreen
         re1 = findViewById(R.id.re1);
         rel2 = findViewById(R.id.rel2);
         rl_decline = findViewById(R.id.rl_decline);
+        PlayGifView pGif = (PlayGifView) findViewById(R.id.viewGif);
+        pGif.setImageResource(R.drawable.connecting);
         runOnUiThread(() -> {
             ivClose.setOnClickListener(this);
             btnEndCall.setOnClickListener(this);
@@ -1307,15 +1313,27 @@ public class AgoraActivity extends MainCallScreen
     }
 
     public static void makeCall(Context context, String gender, String name, String phone, String email, String language) {
+        Boolean validEmail=false;
         gender = gender.toLowerCase();
         language = language.toLowerCase();
+        if (email != null)
+        {
+            if(android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+                validEmail=true;
+            }
+
+        }
         if (!gender.equals("male") && !gender.equals("female")) {
             Toast.makeText(context, context.getString(R.string.valid_gender), Toast.LENGTH_LONG).show();
         } else if (name.isEmpty()) {
             Toast.makeText(context, context.getString(R.string.name_req), Toast.LENGTH_LONG).show();
         } else if (email.isEmpty()) {
             Toast.makeText(context, context.getString(R.string.email_req), Toast.LENGTH_LONG).show();
-        } else if (!language.equals("ar") && !language.equals("en") && !language.equals("fr") && !language.equals("in") && !language.equals("ur")) {
+        }
+        else if (!validEmail) {
+            Toast.makeText(context, context.getString(R.string.valid_email), Toast.LENGTH_LONG).show();
+        }
+        else if (!language.equals("ar") && !language.equals("en") && !language.equals("fr") && !language.equals("in") && !language.equals("ur")) {
             Toast.makeText(context, context.getString(R.string.valid_language), Toast.LENGTH_LONG).show();
         } else {
             Intent intent = new Intent(context, AgoraActivity.class);
@@ -1383,7 +1401,6 @@ public class AgoraActivity extends MainCallScreen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 addOverlay();
