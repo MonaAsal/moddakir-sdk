@@ -230,7 +230,7 @@
 
         <RelativeLayout
             android:id="@+id/rl_decline"
-            android:layout_width="65dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="15dp"

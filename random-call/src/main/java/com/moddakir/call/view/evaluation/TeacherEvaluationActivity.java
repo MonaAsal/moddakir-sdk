@@ -18,6 +18,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.moddakir.call.Model.User;
 import com.moddakir.call.base.BaseMVVMActivity;
 import com.moddakir.call.view.widget.ButtonCalibriBold;
+import com.moddakir.call.view.widget.PlayGifView;
 import com.moddakir.call.viewModel.TeacherEvaluationViewModel;
 import com.moddakir.call.Model.CheckBoxModel;
 import com.moddakir.call.utils.Utils;
@@ -387,6 +388,8 @@ public class TeacherEvaluationActivity extends BaseMVVMActivity<TeacherEvaluatio
                         dialog.setContentView(R.layout.evaluation_done);
                         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                         ImageView close = dialog.findViewById(R.id.close_iv);
+                        PlayGifView pGif = dialog.findViewById(R.id.viewGif);
+                        pGif.setImageResource(R.drawable.rate_success);
                         close.setOnClickListener(view -> {
                             dialog.dismiss();
                             moveToNext();
