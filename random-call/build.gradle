@@ -80,7 +80,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.MonaAsal'
                 artifactId = 'moddakir-sdk'
-                version = '1.1'
+                version = '1.0'
             }
         }
     }
