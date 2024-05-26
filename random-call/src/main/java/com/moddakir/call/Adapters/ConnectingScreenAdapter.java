@@ -5,17 +5,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.moddakir.call.view.widget.TextViewUniqueLight;
 import com.moddakir.call.Model.ConnectingBanner;
 import com.moddakir.call.R;
+
 import java.util.List;
 
-public class ConnectingScreenAdapter extends RecyclerView.Adapter<ConnectingScreenAdapter.PaymentMethodViewHolder> {
+public class ConnectingScreenAdapter extends RecyclerView.Adapter<ConnectingScreenAdapter.ConnectingScreenViewHolder> {
     List<ConnectingBanner> connectingBanner;
+    ConnectingScreenViewHolder holder;
     private Context context;
+    private int Pos = 0;
 
 
     public ConnectingScreenAdapter(Context context, List<ConnectingBanner> connectingBanner) {
@@ -25,16 +30,15 @@ public class ConnectingScreenAdapter extends RecyclerView.Adapter<ConnectingScre
 
     @NonNull
     @Override
-    public PaymentMethodViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ConnectingScreenViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.connecting_item, parent, false);
-        PaymentMethodViewHolder holder = new PaymentMethodViewHolder(view);
+        holder = new ConnectingScreenViewHolder(view);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PaymentMethodViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ConnectingScreenViewHolder holder, int position) {
         holder.bind(connectingBanner.get(position));
-
 
     }
 
@@ -44,14 +48,11 @@ public class ConnectingScreenAdapter extends RecyclerView.Adapter<ConnectingScre
     }
 
 
-    public interface OnPaymentSelectedListener {
-        public void onPaymentSelected(int position);
-    }
-
-    public class PaymentMethodViewHolder extends RecyclerView.ViewHolder {
+    public class ConnectingScreenViewHolder extends RecyclerView.ViewHolder {
         ImageView connecting_iv;
         TextViewUniqueLight connecting_text;
-        public PaymentMethodViewHolder(@NonNull View itemView) {
+
+        public ConnectingScreenViewHolder(@NonNull View itemView) {
             super(itemView);
             connecting_iv = itemView.findViewById(R.id.connecting_iv);
             connecting_text = itemView.findViewById(R.id.connecting_text);
@@ -61,14 +62,23 @@ public class ConnectingScreenAdapter extends RecyclerView.Adapter<ConnectingScre
             try {
                 Glide.with(context)
                         .load(connectingBanner.getUrl())
-                        .into( connecting_iv);
-            }catch (Exception e){
+                        .into(connecting_iv);
+            } catch (Exception e) {
 
             }
-
+            Pos = connectingBanner.getIndex()-1;
             connecting_text.setText(connectingBanner.getTitle());
         }
 
 
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
+    }
+
+    public int currentPos() {
+        return Pos;
     }
 }

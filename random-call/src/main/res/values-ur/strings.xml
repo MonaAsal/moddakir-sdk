@@ -44,5 +44,6 @@
     <string name="email_req">Email is required</string>
     <string name="valid_language">please enter valid language</string>
     <string name="valid_email">please enter valid email</string>
+    <string name="valid_phone">please enter valid phone</string>
     <string name="no_teachers">We apologize for the lack of teachers now, please try later</string>
 </resources>

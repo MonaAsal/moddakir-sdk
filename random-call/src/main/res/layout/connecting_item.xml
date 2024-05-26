@@ -20,7 +20,7 @@
         android:id="@+id/shadow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="30dp"
+        android:padding="45dp"
         android:background="#CC1A1E21"
         app:layout_constraintBottom_toBottomOf="@id/connecting_iv" />
 
@@ -30,6 +30,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/robotolight"
         android:layout_marginHorizontal="@dimen/_10sdp"
+        android:lines="3"
         android:textColor="@color/white"
         android:textSize="14dp"
         app:layout_constraintTop_toTopOf="@+id/shadow"

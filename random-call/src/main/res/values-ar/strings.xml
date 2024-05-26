@@ -44,5 +44,6 @@
     <string name="valid_language">الرجاء إدخال لغة صالحة</string>
     <string name="valid_email">الرجاء إدخال بريد الكترونى صالح</string>
     <string name="no_teachers">نعتذر عن عدم وجود معلمين الان برجاء المحاولة لاحقا</string>
+    <string name="valid_phone">الرجاء إدخال رقم هاتف صالح</string>
 
 </resources>

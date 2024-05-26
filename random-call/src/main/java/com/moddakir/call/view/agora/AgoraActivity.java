@@ -16,10 +16,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Vibrator;
 import android.provider.Settings;
-import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -73,8 +74,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -111,7 +110,8 @@ public class AgoraActivity extends MainCallScreen
         View.OnClickListener {
     private static final String[] REQUESTED_PERMISSIONS = {Manifest.permission.RECORD_AUDIO};
     String channelName = "", isVideo = "false", token = "", LOG_TAG = "AgoraActivity";
-    private RecyclerView viewPager;
+    private RecyclerView bannersRV;
+    int postion=0;
     String gender, name, phone, email, language;
     Boolean IsConnectRTC = false, isVisible = false, isReachingTheTeacher = false, isHangupByStudent = false, isShowBandMessage = false, isJoined = false, TeacherJoin = false, handlerStopped = false, ismute = false, saveRetryCounts = false, TeacherConnected = false, isspeaker = false, isShowed = false, isEndCallByUser = false;
     CreateCallResponseModel RTCData = null;
@@ -553,6 +553,7 @@ public class AgoraActivity extends MainCallScreen
                 .observeOn(AndroidSchedulers.mainThread()) // “listen” on UIThread
                 .map(responseModel -> responseModel)
                 .subscribe(new DisposableSingleObserver<Response<ConnectingBannersResponse>>() {
+                    @SuppressLint("ClickableViewAccessibility")
                     @Override
                     public void onSuccess(Response<ConnectingBannersResponse> response) {
                         if (response.isSuccessful() && response.body() != null) {
@@ -569,6 +570,24 @@ public class AgoraActivity extends MainCallScreen
                                 recyclerView.addItemDecoration(new DotsIndicatorDecoration(radius, radius * 4, dotsHeight, color, color));
                                 new PagerSnapHelper().attachToRecyclerView(recyclerView);
 
+                                int count=adapter.getItemCount();
+                                final Handler handler=new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        if(adapter.currentPos()<count-1){
+                                            recyclerView.scrollToPosition(adapter.currentPos()+1);
+                                        }
+                                        else {
+                                            int postion=0;
+                                            recyclerView.scrollToPosition(postion);
+                                        }
+
+                                        handler.postDelayed(this, 7000);
+                                    }
+                                }, 7000);
+                                recyclerView.setOnTouchListener((view, motionEvent) -> true);
                             }
                         }
                     }
@@ -700,9 +719,12 @@ public class AgoraActivity extends MainCallScreen
                 TeacherEvaluationActivity.start
                         (this, teacher.getId(), teacher.getFullName(), callLog.getCid(), teacher.getAvatarurl(), AccountPreference.getUser(AgoraActivity.this));
                 finish();
-            } else {
+            } else if(callDurationSeconds !=0) {
                 requestUpdateCall("HUNG_UP");
                 onServiceDisconnected(false);
+            }
+            else {
+
             }
             return;
         }
@@ -1243,9 +1265,9 @@ public class AgoraActivity extends MainCallScreen
                                 AccountPreference.registerData(currentUser, AgoraActivity.this);
                                 user = currentUser;
                                 getRandomTeacher();
-                                viewPager = findViewById(R.id.connecting_screen);
-                                viewPager.setLayoutManager(new LinearLayoutManager(AgoraActivity.this, LinearLayoutManager.HORIZONTAL, true));
-                                showingConnectingBanners(viewPager);
+                                bannersRV = findViewById(R.id.connecting_screen);
+                                bannersRV.setLayoutManager(new LinearLayoutManager(AgoraActivity.this, LinearLayoutManager.HORIZONTAL, true));
+                                showingConnectingBanners(bannersRV);
                             }
                         }
                     }
@@ -1274,14 +1296,12 @@ public class AgoraActivity extends MainCallScreen
                                     teacher = teacherModel;
                                     teacher = response.body().getTeacher();
                                     if (teacher != null) {
-                                        showMessage(teacher.getFullName());
                                         mCallerName1.setText(teacher.GetCalleeName());
                                         Utils.loadAvatar(AgoraActivity.this, teacher.getAvatarurl(), civ_teacher_image);
                                         Utils.loadAvatar(AgoraActivity.this, teacher.getAvatarurl(), civ_teacher_image1);
                                         createCallAndGetAvadMin("false");
                                     }
                                 } else {
-                                    showMessage("no teacher now");
                                     Handler handler = new Handler();
                                     handler.postDelayed(new Runnable() {
                                         public void run() {
@@ -1329,6 +1349,9 @@ public class AgoraActivity extends MainCallScreen
             Toast.makeText(context, context.getString(R.string.name_req), Toast.LENGTH_LONG).show();
         } else if (email.isEmpty()) {
             Toast.makeText(context, context.getString(R.string.email_req), Toast.LENGTH_LONG).show();
+        }
+        else if (phone.isEmpty()||phone.length()<6) {
+            Toast.makeText(context, context.getString(R.string.valid_phone), Toast.LENGTH_LONG).show();
         }
         else if (!validEmail) {
             Toast.makeText(context, context.getString(R.string.valid_email), Toast.LENGTH_LONG).show();
