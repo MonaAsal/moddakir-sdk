@@ -35,7 +35,6 @@
         android:allowBackup="true">
     <activity
         android:name="com.moddakir.call.view.agora.AgoraActivity"
-
         android:exported="true"
         android:launchMode="singleInstance"
         android:screenOrientation="portrait"

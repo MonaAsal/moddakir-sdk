@@ -1350,7 +1350,7 @@ public class AgoraActivity extends MainCallScreen
         } else if (email.isEmpty()) {
             Toast.makeText(context, context.getString(R.string.email_req), Toast.LENGTH_LONG).show();
         }
-        else if (phone.isEmpty()||phone.length()<6) {
+        else if (!phone.isEmpty()&&phone.length()<6) {
             Toast.makeText(context, context.getString(R.string.valid_phone), Toast.LENGTH_LONG).show();
         }
         else if (!validEmail) {
